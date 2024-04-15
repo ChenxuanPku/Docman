@@ -7,8 +7,13 @@
 
 std::vector<Citation*> loadCitations(const std::string& filename) {
     // FIXME: load citations from file
-}
+    //open the file(.json)
 
+}
+std::vector<std::string> readFromFile(const std::string& filename)
+{
+    
+}
 int main(int argc, char** argv) {
     // "docman", "-c", "citations.json", "input.txt"
 
@@ -26,9 +31,11 @@ int main(int argc, char** argv) {
         output << "\nReferences: \n";
         c->Print(output);
         // FIXME: print citation
+        // I guess I have done.
     }
 
     for (auto c : citations) {
         delete c;
     }
 }
+
