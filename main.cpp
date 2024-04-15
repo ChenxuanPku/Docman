@@ -11,8 +11,15 @@ std::vector<Citation*> loadCitations(const std::string& filename) {
 
 }
 std::vector<std::string> readFromFile(const std::string& filename)
+//读文件,输入字母串组
 {
-    
+    std::ifstream inputFile(filename);
+    std::vector<std::string> FileResult{}; 
+    std::string line;
+    while(std::getline(inputFile,line))
+      FileResult.push_back(line);
+    return FileResult;
+    //这里返回一整个std::vector<std::string>是不是太浪费内存了,或许我们可以动态分配内存.
 }
 int main(int argc, char** argv) {
     // "docman", "-c", "citations.json", "input.txt"
