@@ -24,6 +24,7 @@ int main(int argc, char** argv) {
     for (auto c : printedCitations) {
         // output << input;  // print the paragraph first
         output << "\nReferences: \n";
+        c->Print(output);
         // FIXME: print citation
     }
 
