@@ -20,6 +20,7 @@ std::vector<std::string> readFromFile(const std::string& filename)
       FileResult.push_back(line);
     return FileResult;
     //这里返回一整个std::vector<std::string>是不是太浪费内存了,或许我们可以动态分配内存.
+    //或许我们应该重新写一个输出.
 }
 int main(int argc, char** argv) {
     // "docman", "-c", "citations.json", "input.txt"
@@ -28,7 +29,7 @@ int main(int argc, char** argv) {
     std::vector<Citation*> printedCitations{};
 
     // FIXME: read all input to the string, and process citations in the input text
-    // auto input = readFromFile(argv[3]);
+    auto input = readFromFile(argv[3]);
     // ...
 
     std::ostream& output = std::cout;
