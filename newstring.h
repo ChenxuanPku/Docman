@@ -10,9 +10,9 @@ class String{
 private:
   std::vector<std::string> str{};
 public:
-  std::ostream& operator<<(std::ostream& os)
+  friend std::ostream& operator<<(std::ostream& os,String Str)
   {
-    for (std::string s:str)
+    for (std::string s:Str.str)
       os<<s;
     os<<std::endl;
     return os;
