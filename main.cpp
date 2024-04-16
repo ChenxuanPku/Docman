@@ -30,6 +30,7 @@ int main(int argc, char** argv) {
 
     // FIXME: read all input to the string, and process citations in the input text
     auto input = readFromFile(argv[3]);
+    //我们期望这里的=是一个初始化
     // ...
 
     std::ostream& output = std::cout;
