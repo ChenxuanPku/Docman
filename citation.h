@@ -4,12 +4,12 @@
 
 #include <string>
 #include <nlohmann/json.hpp>
+#include<map>
+#include <cpp-httplib/httplib.h>
+#include "utils.hpp"
 class Citation {
-
-
-
 public: 
-  int id;
+  std::string id;
   std::string Title; 
   virtual std::string getType() 
   {
@@ -20,10 +20,11 @@ public:
 };
 class Book:public Citation{
 private:
-  std::string Author;
-  std::string Publisher;
-  std::string Year;
+  std::string Author{};
+  std::string Publisher{};
+  std::string Year{};
   std::string Type{"book"};
+  std::string Isbn{};
 public:
   std::string getType() 
   {
@@ -31,21 +32,44 @@ public:
   } 
   void Print(std::ostream& output)
   {
-    output<<"["<<id<<"] "<<Type<<": "<<Author<<","<<Title<<","<<Publisher<<Year<<std::endl;
+    output<<"["<<id<<"] "<<Type<<": "<<Author<<","<<Title<<","<<Publisher<<","<<Year<<std::endl;
   }
   Book (nlohmann::json&item)
   {
+    if (item["id"].is_string()) id=item["id"].get<std::string>();
+    if (item["isbn"].is_string()) Isbn=item["isbn"].get<std::string>();
+    httplib::Client client{ "http://docman.lcpu.dev" };
+    if (item["author"].is_string()) Author=item["author"].get<std::string>();
+    else{auto response = client.Get("/author/" + encodeUriComponent(Isbn));
+        Author=response->body;
 
+    }
+    if (item["title"].is_string()) Title=item["title"].get<std::string>();
+    else{
+        auto response = client.Get("/title/" + encodeUriComponent(Isbn));
+        Title=response->body;
+    }
+    if (item["publisher"].is_string()) Publisher=item["publisher"].get<std::string>();
+    else{
+        auto response = client.Get("/publisher/" + encodeUriComponent(Isbn));
+        Publisher=response->body;
+    }
+    if (item["year"].is_number()) Year=item["year"].get<int>();
+    else{
+      auto response = client.Get("/year/" + encodeUriComponent(Isbn));
+      Year=response->body;
+    }
+    
   }
 };
 
 class Article:public Citation{
 private:
-  std::string Author;
-  std::string Year;
-  std::string Journal;
-  std::string Volume;
-  std::string Issue;
+  std::string Author{};
+  std::string Year{};
+  std::string Journal{};
+  std::string Volume{};
+  std::string Issue{};
   std::string Type{"artcile"};
 public:
 std::string getType() 
@@ -58,12 +82,18 @@ std::string getType()
   }
   Article (nlohmann::json&item)
   {
-    
+    if (item["id"].is_string()) id=item["id"].get<std::string>();
+    if (item["author"].is_string()) Author=item["author"].get<std::string>();
+    if (item["title"].is_string()) Title=item["author"].get<std::string>();
+    if (item["journal"].is_string()) Journal=item["journal"].get<std::string>();
+    if (item["year"].is_number()) Year=item["year"].get<int>();
+    if (item["volume"].is_number()) Volume=item["volume"].get<int>();
+    if (item["issue"].is_number()) Issue=item["issue"].get<int>();
   }
 };
 class Webpage:public Citation{
 private:
-std::string Url;
+std::string Url{};
 std::string Type{"webpage"};
 public:
 std::string getType() 
@@ -76,7 +106,17 @@ std::string getType()
   } 
   Webpage (nlohmann::json&item)
   {
-    
+     if (item["id"].is_string()) id=item["id"].get<std::string>();
+     else{}
+     if (item["url"].is_string()) Url=item["url"].get<std::string>();
+     else{}
+     if (item["title"].is_string()) Title=item["title"].get<std::string>();
+     else {
+        httplib::Client client{ "http://docman.lcpu.dev" };
+        auto title_response = client.Get("/title/" + encodeUriComponent(Url));
+        Title=title_response->body;
+     }
+     
   }
 };
 int TypeID(std::string s)
