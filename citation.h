@@ -3,7 +3,7 @@
 #define CITATION_H
 
 #include <string>
-
+#include <nlohmann/json.hpp>
 class Citation {
 
 
@@ -16,8 +16,9 @@ public:
      return "citation";
   } 
   virtual void Print(std::ostream& output);
+  
 };
-class Book: Citation{
+class Book:public Citation{
 private:
   std::string Author;
   std::string Publisher;
@@ -31,6 +32,10 @@ public:
   void Print(std::ostream& output)
   {
     output<<"["<<id<<"] "<<Type<<": "<<Author<<","<<Title<<","<<Publisher<<Year<<std::endl;
+  }
+  Book (nlohmann::json&item)
+  {
+
   }
 };
 
@@ -51,6 +56,10 @@ std::string getType()
   {
     output<<"["<<id<<"] "<<Type<<": "<<Author<<","<<Title<<","<<Journal<<","<<Year<<","<<","<<Volume<<","<<Issue<<std::endl;
   }
+  Article (nlohmann::json&item)
+  {
+    
+  }
 };
 class Webpage:public Citation{
 private:
@@ -65,5 +74,34 @@ std::string getType()
   {
     output<<"["<<id<<"] "<<Type<<": "<<Title<<". Avaiable at"<<Url<<std::endl;
   } 
+  Webpage (nlohmann::json&item)
+  {
+    
+  }
 };
+int TypeID(std::string s)
+{
+  if(s=="article")return 1;
+  if(s=="book") return 2;
+  if(s=="webpage") return 3;
+  return 0;
+}
+Citation* CitationConstruct(nlohmann::json& item )
+{  
+  
+  switch(TypeID(item["type"].get<std::string>())){
+    case 1: {
+      return new Article(item);
+    }
+    case 2:{
+      return new Book(item);
+    }
+    case 3:{
+      return new Webpage(item);
+    }
+    default:{
+      return new Citation;
+    }
+  }
+}
 #endif

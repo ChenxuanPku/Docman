@@ -5,10 +5,18 @@
 #include "utils.hpp"
 #include "citation.h"
 #include "newstring.h"
+#include <nlohmann/json.hpp>
 std::vector<Citation*> loadCitations(const std::string& filename) {
     // FIXME: load citations from file
     //open the file(.json)
-
+    std::ifstream inputJson(filename);
+    std::vector<Citation*> Cite{};
+    nlohmann::json data = nlohmann::json::parse(inputJson);
+    for (auto& item: data["citations"] )
+    {
+        Cite.push_back(CitationConstruct(item));
+    }
+    return Cite;
 }
 String readFromFile(const std::string& filename)
 //读文件,输入字母串组
