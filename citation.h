@@ -7,10 +7,24 @@
 #include<map>
 #include <cpp-httplib/httplib.h>
 #include "utils.hpp"
+
+std::string HTstring(const std::string& str)//在字符串前后加/ /
+{
+  std::string ans{"/"};
+  ans+=str;
+  ans.append("/");
+  return ans;
+
+} 
 class Citation {
 public: 
   std::string id;
   std::string Title; 
+  std::map<std::string,std::string> IniInf;
+  std::map<std::string,std::string> GetInf;
+  Citation (){}
+  Citation (const std::map<std::string,std::string>& T,std::map<std::string,std::string>& TT)
+  : IniInf{T},GetInf{TT} {}
   virtual std::string getType() 
   {
      return "citation";
@@ -20,11 +34,16 @@ public:
 };
 class Book:public Citation{
 private:
-  std::string Author{};
-  std::string Publisher{};
-  std::string Year{};
+  
+  
+  
   std::string Type{"book"};
   std::string Isbn{};
+  std::map<std::string,std::string>IniInf={{"id",""},{"isbn",""}};
+  std::map<std::string,std::string> GetInf={
+    {"author",{}},
+    {"title",{}},
+    {"year",{}}};
 public:
   std::string getType() 
   {
@@ -32,32 +51,22 @@ public:
   } 
   void Print(std::ostream& output)
   {
-    output<<"["<<id<<"] "<<Type<<": "<<Author<<","<<Title<<","<<Publisher<<","<<Year<<std::endl;
+    output<<"["<<id<<"] "<<Type<<": "<<GetInf["author"]<<","<<GetInf["title"]<<","<<GetInf["publisher"]<<","<<GetInf["year"]<<std::endl;
   }
-  Book (nlohmann::json&item)
+  Book (nlohmann::json&item):
+  Citation(IniInf,GetInf)
   {
-    if (item["id"].is_string()) id=item["id"].get<std::string>();
-    if (item["isbn"].is_string()) Isbn=item["isbn"].get<std::string>();
+    for (auto a:IniInf)
+    {
+      if (item[a.first].is_string()) a.second=item[a.first].get<std::string>();
+    }
+    if (item["id"].is_string()) IniInf["id"]=item["id"].get<std::string>();//else 报错
+    if (item["isbn"].is_string()) IniInf["isbn"]=item["isbn"].get<std::string>();//else 报错
     httplib::Client client{ "http://docman.lcpu.dev" };
-    if (item["author"].is_string()) Author=item["author"].get<std::string>();
-    else{auto response = client.Get("/author/" + encodeUriComponent(Isbn));
-        Author=response->body;
-
-    }
-    if (item["title"].is_string()) Title=item["title"].get<std::string>();
-    else{
-        auto response = client.Get("/title/" + encodeUriComponent(Isbn));
-        Title=response->body;
-    }
-    if (item["publisher"].is_string()) Publisher=item["publisher"].get<std::string>();
-    else{
-        auto response = client.Get("/publisher/" + encodeUriComponent(Isbn));
-        Publisher=response->body;
-    }
-    if (item["year"].is_number()) Year=item["year"].get<int>();
-    else{
-      auto response = client.Get("/year/" + encodeUriComponent(Isbn));
-      Year=response->body;
+    for (auto a:GetInf)
+    {
+      auto response=client.Get(HTstring(a.first) + encodeUriComponent(Isbn));
+      a.second=response->body;
     }
     
   }
