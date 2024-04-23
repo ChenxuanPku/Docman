@@ -42,13 +42,13 @@ int main(int argc, char** argv) {
     // ...
 
     std::ostream& output = std::cout;
-
+    //check whether the input is legal.
     for (auto c : printedCitations) {
         output << input;  // print the paragraph first
         output << "\nReferences:\n";
         c->Print(output);
         // FIXME: print citation
-        // I guess I have done.
+       
     }
 
     for (auto c : citations) {
