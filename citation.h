@@ -23,7 +23,7 @@ public:
   {
      return "citation";
   } 
-  virtual void Print(std::ostream& output);
+  virtual void Print(std::ostream& output){}
   
 };
 class Book:public Citation{
