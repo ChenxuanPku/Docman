@@ -3,7 +3,7 @@
 #define CITATION_H
 
 #include <string>
-#include <nlohmann/json.hpp>
+#include<nlohmann/json.hpp>
 #include<map>
 #include <cpp-httplib/httplib.h>
 #include "utils.hpp"
@@ -51,7 +51,7 @@ public:
     }
     if (item["id"].is_string()) IniInf["id"]=item["id"].get<std::string>();//else 报错
     if (item["isbn"].is_string()) IniInf["isbn"]=item["isbn"].get<std::string>();//else 报错
-    httplib::Client client{ "http://docman.lcpu.dev" };
+    httplib::Client client{ API_ENDPOINT };
     for (auto a:GetInf)
     {
       auto response=client.Get(HTstring(a.first) + encodeUriComponent(IniInf["isbn"]));
@@ -92,7 +92,7 @@ std::string getType()
 };
 class Webpage:public Citation{
 private:
-std::string Type{"book"};
+
   std::map<std::string,std::string>IniInf={{"id",""},{"url",""}};
   std::map<std::string,std::string> GetInf={
     {"title",{}}};
@@ -113,7 +113,7 @@ std::string getType()
       if (item[a.first].is_string()) a.second=item[a.first].get<std::string>();
     }
    
-    httplib::Client client{ "http://docman.lcpu.dev" };
+    httplib::Client client{API_ENDPOINT};
     for (auto a:GetInf)
     {
       auto response=client.Get(HTstring(a.first) + encodeUriComponent(IniInf["url"]));
