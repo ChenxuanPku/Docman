@@ -18,13 +18,7 @@ std::string HTstring(const std::string& str)//在字符串前后加/ /
 } 
 class Citation {
 public: 
-  std::string id;
-  std::string Title; 
-  std::map<std::string,std::string> IniInf;
-  std::map<std::string,std::string> GetInf;
   Citation (){}
-  Citation (const std::map<std::string,std::string>& T,std::map<std::string,std::string>& TT)
-  : IniInf{T},GetInf{TT} {}
   virtual std::string getType() 
   {
      return "citation";
@@ -34,11 +28,7 @@ public:
 };
 class Book:public Citation{
 private:
-  
-  
-  
   std::string Type{"book"};
-  std::string Isbn{};
   std::map<std::string,std::string>IniInf={{"id",""},{"isbn",""}};
   std::map<std::string,std::string> GetInf={
     {"author",{}},
@@ -51,10 +41,9 @@ public:
   } 
   void Print(std::ostream& output)
   {
-    output<<"["<<id<<"] "<<Type<<": "<<GetInf["author"]<<","<<GetInf["title"]<<","<<GetInf["publisher"]<<","<<GetInf["year"]<<std::endl;
+    output<<"["<<IniInf["id"]<<"] "<<Type<<": "<<GetInf["author"]<<","<<GetInf["title"]<<","<<GetInf["publisher"]<<","<<GetInf["year"]<<std::endl;
   }
-  Book (nlohmann::json&item):
-  Citation(IniInf,GetInf)
+  Book (nlohmann::json&item)
   {
     for (auto a:IniInf)
     {
@@ -65,7 +54,7 @@ public:
     httplib::Client client{ "http://docman.lcpu.dev" };
     for (auto a:GetInf)
     {
-      auto response=client.Get(HTstring(a.first) + encodeUriComponent(Isbn));
+      auto response=client.Get(HTstring(a.first) + encodeUriComponent(IniInf["isbn"]));
       a.second=response->body;
     }
     
@@ -74,12 +63,16 @@ public:
 
 class Article:public Citation{
 private:
-  std::string Author{};
-  std::string Year{};
-  std::string Journal{};
-  std::string Volume{};
-  std::string Issue{};
-  std::string Type{"artcile"};
+  std::map<std::string,std::string>IniInf={
+    {"id",""},
+    {"title",""},
+    {"author",""},
+    {"year",""},
+    {"journal",""},
+    {"volume",""},
+    {"issue",""}
+  };
+  std::string Type{"article"};
 public:
 std::string getType() 
   {
@@ -87,22 +80,22 @@ std::string getType()
   } 
     void Print(std::ostream& output)
   {
-    output<<"["<<id<<"] "<<Type<<": "<<Author<<","<<Title<<","<<Journal<<","<<Year<<","<<","<<Volume<<","<<Issue<<std::endl;
+    output<<"["<<IniInf["id"]<<"] "<<Type<<": "<<IniInf["author"]<<","<<IniInf["title"]<<","<<IniInf["journal"]<<","<<IniInf["year"]<<","<<","<<IniInf["volume"]<<","<<IniInf["issue"]<<std::endl;
   }
   Article (nlohmann::json&item)
   {
-    if (item["id"].is_string()) id=item["id"].get<std::string>();
-    if (item["author"].is_string()) Author=item["author"].get<std::string>();
-    if (item["title"].is_string()) Title=item["author"].get<std::string>();
-    if (item["journal"].is_string()) Journal=item["journal"].get<std::string>();
-    if (item["year"].is_number()) Year=item["year"].get<int>();
-    if (item["volume"].is_number()) Volume=item["volume"].get<int>();
-    if (item["issue"].is_number()) Issue=item["issue"].get<int>();
+    for (auto a:IniInf)
+    {
+      if (item[a.first].is_string()) a.second=item[a.first].get<std::string>(); //else;
+    }
   }
 };
 class Webpage:public Citation{
 private:
-std::string Url{};
+std::string Type{"book"};
+  std::map<std::string,std::string>IniInf={{"id",""},{"url",""}};
+  std::map<std::string,std::string> GetInf={
+    {"title",{}}};
 std::string Type{"webpage"};
 public:
 std::string getType() 
@@ -111,20 +104,21 @@ std::string getType()
   } 
    void Print(std::ostream& output)
   {
-    output<<"["<<id<<"] "<<Type<<": "<<Title<<". Avaiable at"<<Url<<std::endl;
+    output<<"["<<IniInf["id"]<<"] "<<Type<<": "<<IniInf["title"]<<". Avaiable at"<<IniInf["url"]<<std::endl;
   } 
   Webpage (nlohmann::json&item)
   {
-     if (item["id"].is_string()) id=item["id"].get<std::string>();
-     else{}
-     if (item["url"].is_string()) Url=item["url"].get<std::string>();
-     else{}
-     if (item["title"].is_string()) Title=item["title"].get<std::string>();
-     else {
-        httplib::Client client{ "http://docman.lcpu.dev" };
-        auto title_response = client.Get("/title/" + encodeUriComponent(Url));
-        Title=title_response->body;
-     }
+     for (auto a:IniInf)
+    {
+      if (item[a.first].is_string()) a.second=item[a.first].get<std::string>();
+    }
+   
+    httplib::Client client{ "http://docman.lcpu.dev" };
+    for (auto a:GetInf)
+    {
+      auto response=client.Get(HTstring(a.first) + encodeUriComponent(IniInf["url"]));
+      a.second=response->body;
+    }
      
   }
 };
