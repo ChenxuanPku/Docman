@@ -16,6 +16,7 @@ std::vector<Citation*> loadCitations(const std::string& filename) {
     {
         Cite.push_back(CitationConstruct(item));
     }
+    std::sort(Cite.begin(),Cite.end(),cmp);
     return Cite;
 }
 String readFromFile(const std::string& filename)
@@ -30,6 +31,9 @@ String readFromFile(const std::string& filename)
     //这里返回一整个std::vector<std::string>是不是太浪费内存了,或许我们可以动态分配内存.
     //或许我们应该重新写一个输出.
 }
+
+
+
 int main(int argc, char** argv) {
     // "docman", "-c", "citations.json", "input.txt"
 
@@ -38,9 +42,11 @@ int main(int argc, char** argv) {
 
     // FIXME: read all input to the string, and process citations in the input text
     auto input = readFromFile(argv[3]);
-    //我们期望这里的=是一个初始化
+    auto ProcessedInput=CheckLegal(input);
+    Process(ProcessedInput,citations,printedCitations);
     // ...
 
+    
     std::ostream& output = std::cout;
     //check whether the input is legal.
     for (auto c : printedCitations) {

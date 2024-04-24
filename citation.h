@@ -25,7 +25,10 @@ public:
   Citation (){}
   Citation (std::map<std::string,std::string>IniInf,std::map<std::string,std::string> GetInf,nlohmann::json&item);
   virtual void Print(std::ostream& output){}
-  
+  std::string GetId()
+  {
+    return IniInf["id"];
+  }
 };
 class Book:public Citation{
 private:
@@ -128,5 +131,25 @@ Citation* CitationConstruct(nlohmann::json& item )
     }
   }
 }
+bool cmp(Citation* a,Citation* b)
+{
+  return a->GetId()<b->GetId();
+}
 
+void Process(std::vector<std::string>& Lib, std::vector<Citation*>& Input,std::vector<Citation*>& Output){
+  std::sort(Lib.begin(),Lib.end()); 
+  int SizeLib{Lib.size()};
+  int SizeIn{Input.size()};
+  int PtrLib{0},PtrIn{0};
+  for(;PtrIn!=SizeIn;PtrIn++)
+  {
+    if(Lib[PtrLib]==Input[PtrIn]->GetId())
+    {
+       Output.push_back(Input[PtrIn]);
+       PtrLib++;
+       
+    }
+    if(PtrLib==SizeLib) break;
+  }if (PtrLib!=SizeLib) std::exit(1);
+}
 #endif
