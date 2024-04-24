@@ -100,16 +100,19 @@ Citation::Citation (std::map<std::string,std::string>IniInf,std::map<std::string
     }
   httplib::Client client{ API_ENDPOINT };
   if(IniInf["type"]=="book")
-  {for (auto a:GetInf)
+
+  {
+    for (auto a:GetInf)
     {
-      auto response=client.Get(HTstring(a.first) + encodeUriComponent(IniInf["isbn"]));
+       auto response=client.Get(HTstring(a.first) + encodeUriComponent(IniInf["isbn"]));
+      if(response->status==200) a.second=response->body;else std::exit(1);
       a.second=response->body;
     }}
   if(IniInf["type"]=="webpage")
   {for (auto a:GetInf)
     {
       auto response=client.Get(HTstring(a.first) + encodeUriComponent(IniInf["url"]));
-      a.second=response->body;
+      if(response->status==200) a.second=response->body;else std::exit(1);
     }}  
 }
 Citation* CitationConstruct(nlohmann::json& item )
