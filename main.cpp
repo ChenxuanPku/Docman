@@ -21,15 +21,20 @@ std::vector<Citation*> loadCitations(const std::string& filename) {
 }
 String readFromFile(const std::string& filename)
 //读文件,输入字母串组
-{
-    std::ifstream inputFile(filename);
+{   
+    
+    
     String FileResult{}; 
     std::string line;
+    if(filename!="-")
+    {std::ifstream inputFile(filename);
     while(std::getline(inputFile,line))
-      FileResult.Push_Back(line);
+      FileResult.Push_Back(line);}
+    else 
+    {while(std::getline(std::cin,line))
+      FileResult.Push_Back(line);}
     return FileResult;
-    //这里返回一整个std::vector<std::string>是不是太浪费内存了,或许我们可以动态分配内存.
-    //或许我们应该重新写一个输出.
+    //这里相当于起到了构造函数的作用
 }
 
 
@@ -37,17 +42,30 @@ String readFromFile(const std::string& filename)
 int main(int argc, char** argv) {
     // "docman", "-c", "citations.json", "input.txt"
 
+    
     auto citations = loadCitations(argv[2]);
     std::vector<Citation*> printedCitations{};
 
     // FIXME: read all input to the string, and process citations in the input text
-    auto input = readFromFile(argv[3]);
+    int Pos;
+    if(argv[3]=="-o")Pos=5;else Pos=3;
+    auto input = readFromFile(argv[Pos+1]);
     auto ProcessedInput=CheckLegal(input);
     Process(ProcessedInput,citations,printedCitations);
     // ...
 
-    
-    std::ostream& output = std::cout;
+    if (Pos==4)
+    {std::ofstream output{argv[4]};
+    //check whether the input is legal.
+    for (auto c : printedCitations) {
+        output << input;  // print the paragraph first
+        output << "\nReferences:\n";
+        c->Print(output);
+        // FIXME: print citation
+       
+    }}
+    else {
+        std::ostream& output{std::cout};
     //check whether the input is legal.
     for (auto c : printedCitations) {
         output << input;  // print the paragraph first
@@ -56,7 +74,6 @@ int main(int argc, char** argv) {
         // FIXME: print citation
        
     }
-
     for (auto c : citations) {
         delete c;
     }
