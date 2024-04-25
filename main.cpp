@@ -73,7 +73,7 @@ int main(int argc, char** argv) {
         c->Print(output);
         // FIXME: print citation
        
-    }
+    }}
     for (auto c : citations) {
         delete c;
     }
