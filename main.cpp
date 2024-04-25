@@ -41,20 +41,20 @@ String readFromFile(const std::string& filename)
 
 int main(int argc, char** argv) {
     // "docman", "-c", "citations.json", "input.txt"
-
+    std::cout<<"load"<<std::endl;
     
     auto citations = loadCitations(argv[2]);
     std::vector<Citation*> printedCitations{};
-
+    std::cout<<"read"<<std::endl;
     // FIXME: read all input to the string, and process citations in the input text
     int Pos;
     if(argv[3]=="-o")Pos=5;else Pos=3;
-    auto input = readFromFile(argv[Pos+1]);
+    auto input = readFromFile(argv[Pos]);
     auto ProcessedInput=CheckLegal(input);
     Process(ProcessedInput,citations,printedCitations);
     // ...
 
-    if (Pos==4)
+    if (Pos==5)
     {std::ofstream output{argv[4]};
     //check whether the input is legal.
     for (auto c : printedCitations) {
