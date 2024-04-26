@@ -7,25 +7,25 @@
 #include<map>
 #include <cpp-httplib/httplib.h>
 #include "utils.hpp"
-std::map<std::string,std::string>bookIniInf={{"id","-"},{"isbn","-"},{"type","book"}};
+std::map<std::string,std::string>bookIniInf={{"id",""},{"isbn",""},{"type","book"}};
 std::map<std::string,std::string>bookGetInf={
-    {"author","-"},
-    {"title","-"},
-    {"year","-"}};
+    {"author",""},
+    {"title",""},
+    {"year",""}};
 std::map<std::string,std::string>articleIniInf={
-    {"id","-"},
-    {"title","-"},
-    {"author","-"},
-    {"year","-"},
-    {"journal","-"},
-    {"volume","-"},
-    {"issue","-"},
+    {"id",""},
+    {"title",""},
+    {"author",""},
+    {"year",""},
+    {"journal",""},
+    {"volume",""},
+    {"issue",""},
     {"type","article"}
   };
-  std::map<std::string,std::string>articleGetInf={{"-","-"}};
-   std::map<std::string,std::string>webIniInf={{"id","-"},{"url","-"},{"type","webpage"}};
+  std::map<std::string,std::string>articleGetInf={{"",""}};
+   std::map<std::string,std::string>webIniInf={{"id",""},{"url",""},{"type","webpage"}};
   std::map<std::string,std::string>webGetInf={
-    {"title","-"}};
+    {"title",""}};
 
 std::string HTstring(const std::string& str)//在字符串前后加/ /
 {
@@ -61,6 +61,7 @@ public:
   }
   Book (nlohmann::json&item):Citation(item,bookIniInf,bookGetInf)
   {
+     httplib::Client client{ API_ENDPOINT };
   }
 };
 class Article:public Citation{
@@ -96,12 +97,13 @@ int TypeID(std::string s)
 }
 Citation::Citation (nlohmann::json&item, std::map<std::string,std::string>& otherIniInf,std::map<std::string,std::string>& otherGetInf):IniInf(otherIniInf),GetInf(otherGetInf)
 {
+ 
   for (auto a:IniInf)
-    {
+    { 
      
       if (item.contains(a.first)){
-        if(item[a.first])a.second=std::to_string(item[a.first].get<int>());
-        else a.second=item[a.first].get<std::string>();
+        if(item[a.first].is_number_integer())a.second=std::to_string(item[a.first].get<int>());
+        else IniInf[a.first]=item[a.first].get<std::string>();
        }else std::exit(1);
     std::cout<<a.first<<" "<<a.second<<std::endl;
     }
@@ -110,8 +112,8 @@ Citation::Citation (nlohmann::json&item, std::map<std::string,std::string>& othe
      std::cout<<a.first<<" "<<a.second<<std::endl;
   }
   std::cout<<GetId()<<std::endl;
-  httplib::Client client{ API_ENDPOINT };
- /* if(IniInf["type"]=="book")
+ 
+/* if(IniInf["type"]=="book")
 
   {
 
@@ -120,7 +122,7 @@ Citation::Citation (nlohmann::json&item, std::map<std::string,std::string>& othe
       
        auto response=client.Get(HTstring(a.first) + encodeUriComponent(IniInf["isbn"]));
        
-      if(response->status==200) a.second=response->body;else{std::exit(1);} 
+      if(response->status==200) GetInf[a.first]=response->body;else{std::exit(1);} 
       std::cout<<IniInf["type"]<<std::endl;
     }}
    
@@ -128,7 +130,7 @@ Citation::Citation (nlohmann::json&item, std::map<std::string,std::string>& othe
   {for (auto a:GetInf)
     {
       auto response=client.Get(HTstring(a.first) + encodeUriComponent(IniInf["url"]));
-      if(response->status==200) a.second=response->body;else std::exit(1);
+      if(response->status==200) GetInf[a.first]=response->body;else std::exit(1);
     }}  */
 }
 Citation* CitationConstruct(nlohmann::json& item )
