@@ -60,10 +60,9 @@ public:
     output<<"["<<Citation::IniInf["id"]<<"] "<<IniInf["type"]<<": "<<Citation::GetInf["author"]<<","<<Citation::GetInf["title"]<<","<<Citation::GetInf["publisher"]<<","<<Citation::GetInf["year"]<<std::endl;
   }
   Book (nlohmann::json&item):Citation(item,bookIniInf,bookGetInf)
-  {std::cout<<"construct book"<<std::endl;
+  {
   }
 };
-
 class Article:public Citation{
 private:
   
@@ -74,7 +73,7 @@ public:
     output<<"["<<Citation::IniInf["id"]<<"] "<<IniInf["type"]<<": "<<Citation::IniInf["author"]<<","<<Citation::IniInf["title"]<<","<<Citation::IniInf["journal"]<<","<<Citation::IniInf["year"]<<","<<","<<Citation::IniInf["volume"]<<","<<Citation::IniInf["issue"]<<std::endl;
   }
   Article (nlohmann::json&item):Citation(item,articleIniInf,articleGetInf)
-  {std::cout<<"construct article"<<std::endl;
+  {
   }
 };
 class Webpage:public Citation{
@@ -86,7 +85,7 @@ public:
   {
     output<<"["<<IniInf["id"]<<"] "<<IniInf["type"]<<": "<<IniInf["title"]<<". Avaiable at"<<IniInf["url"]<<std::endl;
   } 
-  Webpage (nlohmann::json&item):Citation(item,webIniInf,webGetInf){std::cout<<"construct webpage"<<std::endl;}
+  Webpage (nlohmann::json&item):Citation(item,webIniInf,webGetInf){}
 };
 int TypeID(std::string s)
 {
@@ -95,17 +94,20 @@ int TypeID(std::string s)
   if(s=="webpage") return 3;
   return 0;
 }
-Citation::Citation (nlohmann::json&item,const std::map<std::string,std::string>& otherIniInf,const std::map<std::string,std::string>& otherGetInf={}):IniInf(otherIniInf),GetInf(otherGetInf)
+Citation::Citation (nlohmann::json&item,const std::map<std::string,std::string>& otherIniInf,const std::map<std::string,std::string>& otherGetInf):IniInf(otherIniInf),GetInf(otherGetInf)
 {
-  std::cout<<"construct citation"<<std::endl;
-
   for (auto a:IniInf)
     {
-      if (item[a.first].is_string()) a.second=item[a.first].get<std::string>();else std::exit(1);
+      std::cout<<a.first<<std::endl;
+      if (item[a.first].is_string()) a.second=item[a.first].get<std::string>();else {
+        if(item[a.first].is_number_integer())a.second=std::to_string(item[a.first].get<int>());
+        else std::exit(1);
+     std::cout<<a.first<<" "<<a.second<<std::endl;
     }
-  std::cout<<IniInf["type"]<<std::endl;
+    }
+  
   httplib::Client client{ API_ENDPOINT };
-  /*if(IniInf["type"]=="book")
+ /* if(IniInf["type"]=="book")
 
   {
 
@@ -130,7 +132,7 @@ Citation* CitationConstruct(nlohmann::json& item )
  
   switch(TypeID(item["type"].get<std::string>())){
     case 1: {
-      
+      return new Article(item);
     }
     case 2:{
       
@@ -151,14 +153,17 @@ bool cmp(Citation* a,Citation* b)
 }
 
 void Process(std::vector<std::string>& Lib, std::vector<Citation*>& Input,std::vector<Citation*>& Output){
-  std::sort(Lib.begin(),Lib.end()); 
+ 
   int SizeLib{Lib.size()};
   int SizeIn{Input.size()};
   int PtrLib{0},PtrIn{0};
   for(;PtrIn!=SizeIn;PtrIn++)
   {
+    std::cout<<PtrIn<<" "<<PtrLib<<std::endl;
+    std::cout<<Lib[PtrLib]<<" "<<Input[PtrIn]->GetId()<<std::endl;
     if(Lib[PtrLib]==Input[PtrIn]->GetId())
     {
+       std::cout<<Input[PtrIn]->GetId()<<std::endl;
        Output.push_back(Input[PtrIn]);
        PtrLib++;
        

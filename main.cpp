@@ -15,18 +15,18 @@ std::vector<Citation*> loadCitations(const std::string& filename) {
     // FIXME: load citations from file
     //open the file(.json)
     std::cout<<filename<<std::endl;
-    log();
+    
     std::ifstream inputJson(filename);
     std::vector<Citation*> Cite{};
-    log();
+    
     nlohmann::json data = nlohmann::json::parse(inputJson);
     for (auto& item: data["citations"] )
     {
-        log();
+        
         Cite.push_back(CitationConstruct(item));
     }
     std::sort(Cite.begin(),Cite.end(),cmp);
-    log();
+    
     return Cite;
 }
 String readFromFile(const std::string& filename)
@@ -61,8 +61,9 @@ int main(int argc, char** argv) {
     int Pos;
     if(argv[3]=="-o")Pos=5;else Pos=3;
     auto input = readFromFile(argv[Pos]);
-
+    std::cout<<"readFile"<<std::endl;
     auto ProcessedInput=CheckLegal(input);
+    for (auto c:ProcessedInput)std::cout<<c<<std::endl;
     Process(ProcessedInput,citations,printedCitations);
     // ...
 
