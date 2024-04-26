@@ -42,7 +42,7 @@ protected:
 public: 
   
   Citation (){}
-  Citation (nlohmann::json&item,const std::map<std::string,std::string>&IniInf,const std::map<std::string,std::string>& GetInf);
+  Citation (nlohmann::json&item, std::map<std::string,std::string>&IniInf, std::map<std::string,std::string>& GetInf);
   virtual void Print(std::ostream& output){}
   std::string GetId()
   {
@@ -94,18 +94,22 @@ int TypeID(std::string s)
   if(s=="webpage") return 3;
   return 0;
 }
-Citation::Citation (nlohmann::json&item,const std::map<std::string,std::string>& otherIniInf,const std::map<std::string,std::string>& otherGetInf):IniInf(otherIniInf),GetInf(otherGetInf)
+Citation::Citation (nlohmann::json&item, std::map<std::string,std::string>& otherIniInf,std::map<std::string,std::string>& otherGetInf):IniInf(otherIniInf),GetInf(otherGetInf)
 {
   for (auto a:IniInf)
     {
-      std::cout<<a.first<<std::endl;
-      if (item[a.first].is_string()) a.second=item[a.first].get<std::string>();else {
-        if(item[a.first].is_number_integer())a.second=std::to_string(item[a.first].get<int>());
-        else std::exit(1);
+     
+      if (item.contains(a.first)){
+        if(item[a.first])a.second=std::to_string(item[a.first].get<int>());
+        else a.second=item[a.first].get<std::string>();
+       }else std::exit(1);
+    std::cout<<a.first<<" "<<a.second<<std::endl;
+    }
+  for(auto a:IniInf)
+  {
      std::cout<<a.first<<" "<<a.second<<std::endl;
-    }
-    }
-  
+  }
+  std::cout<<GetId()<<std::endl;
   httplib::Client client{ API_ENDPOINT };
  /* if(IniInf["type"]=="book")
 
