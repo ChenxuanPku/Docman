@@ -6,17 +6,27 @@
 #include "citation.h"
 #include "newstring.h"
 #include <nlohmann/json.hpp>
+int num;
+void log(){
+    std::cout<<num<<std::endl;
+    num++;
+}
 std::vector<Citation*> loadCitations(const std::string& filename) {
     // FIXME: load citations from file
     //open the file(.json)
+    std::cout<<filename<<std::endl;
+    log();
     std::ifstream inputJson(filename);
     std::vector<Citation*> Cite{};
+    log();
     nlohmann::json data = nlohmann::json::parse(inputJson);
     for (auto& item: data["citations"] )
     {
+        log();
         Cite.push_back(CitationConstruct(item));
     }
     std::sort(Cite.begin(),Cite.end(),cmp);
+    log();
     return Cite;
 }
 String readFromFile(const std::string& filename)
@@ -41,7 +51,8 @@ String readFromFile(const std::string& filename)
 
 int main(int argc, char** argv) {
     // "docman", "-c", "citations.json", "input.txt"
-    std::cout<<"load"<<std::endl;
+    
+    num=0;
     
     auto citations = loadCitations(argv[2]);
     std::vector<Citation*> printedCitations{};
@@ -50,25 +61,29 @@ int main(int argc, char** argv) {
     int Pos;
     if(argv[3]=="-o")Pos=5;else Pos=3;
     auto input = readFromFile(argv[Pos]);
+
     auto ProcessedInput=CheckLegal(input);
     Process(ProcessedInput,citations,printedCitations);
     // ...
 
     if (Pos==5)
     {std::ofstream output{argv[4]};
+    output << input;  // print the paragraph first
+        output << "\nReferences:\n";
     //check whether the input is legal.
     for (auto c : printedCitations) {
-        output << input;  // print the paragraph first
-        output << "\nReferences:\n";
+        
         c->Print(output);
         // FIXME: print citation
        
     }}
     else {
         std::ostream& output{std::cout};
+      output << input;  // print the paragraph first
+        output << "\nReferences:\n";
     //check whether the input is legal.
     for (auto c : printedCitations) {
-        output << input;  // print the paragraph first
+         // print the paragraph first
         output << "\nReferences:\n";
         c->Print(output);
         // FIXME: print citation
