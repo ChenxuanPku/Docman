@@ -11,6 +11,7 @@ std::map<std::string,std::string>bookIniInf={{"id",""},{"isbn",""},{"type","book
 std::map<std::string,std::string>bookGetInf={
     {"author",""},
     {"title",""},
+    {"publisher",""},
     {"year",""}};
 std::map<std::string,std::string>articleIniInf={
     {"id",""},
@@ -84,7 +85,7 @@ private:
 public:
    void Print(std::ostream& output)
   {
-    output<<"["<<IniInf["id"]<<"] "<<IniInf["type"]<<": "<<IniInf["title"]<<". Avaiable at"<<IniInf["url"]<<std::endl;
+    output<<"["<<IniInf["id"]<<"] "<<IniInf["type"]<<": "<<GetInf["title"]<<". Avaiable at "<<IniInf["url"]<<std::endl;
   } 
   Webpage (nlohmann::json&item):Citation(item,webIniInf,webGetInf){}
 };
@@ -110,28 +111,42 @@ Citation::Citation (nlohmann::json&item, std::map<std::string,std::string>& othe
   
   //std::cout<<a.first<<" "<<a.second<<std::endl;
  
- httplib::Client client{ "http://docman.lcpu.dev" };
+ httplib::Client client{"http://docman.lcpu.dev"};
  if(IniInf["type"]=="book")
 
   {
-
-    for (auto a:GetInf)
-    {
+    
+       auto response=client.Get("/isbn/" + encodeUriComponent(IniInf["isbn"]));
       
-       auto response=client.Get(HTstring(a.first) + encodeUriComponent(IniInf["isbn"]));
-       
-      if(response->status==200)GetInf[a.first]=response->body ;else{ std::cout<<response->status<<std::endl;std::exit(1);
+      if(response && response->status == httplib::OK_200)
+      {
+       // std::cout << response->body << std::endl; 
+         nlohmann::json data = nlohmann::json::parse(response->body);
+        for(auto a:GetInf)
+        {
+        
+          GetInf[a.first]=data[a.first].get<std::string>();
+        }
+      }
+        else{
+        std::exit(1);
       } 
      
-    }}
+    }
    
   if(IniInf["type"]=="webpage")
-  {for (auto a:GetInf)
-    {
-      auto response=client.Get(HTstring(a.first) + encodeUriComponent(IniInf["url"]));
-            if(response->status==200)GetInf[a.first]=response->body ;else{ std::cout<<response->status<<std::endl;std::exit(1);
-            } 
-    }}  
+  {
+    
+      auto response=client.Get("/title/" + encodeUriComponent(IniInf["url"]));
+      //std::cout<<IniInf["url"]<<" "<<response->body<<std::endl;
+           if(response && response->status == httplib::OK_200)
+           {
+             nlohmann::json data = nlohmann::json::parse(response->body);
+             for(auto a:GetInf)
+             GetInf[a.first]=data[a.first].get<std::string>();
+           } else{std::exit(1);
+
+    }  }
 }
 Citation* CitationConstruct(nlohmann::json& item )
 {  
