@@ -110,8 +110,8 @@ Citation::Citation (nlohmann::json&item, std::map<std::string,std::string>& othe
   
   //std::cout<<a.first<<" "<<a.second<<std::endl;
  
- 
-/* if(IniInf["type"]=="book")
+ httplib::Client client{ "http://docman.lcpu.dev" };
+ if(IniInf["type"]=="book")
 
   {
 
@@ -120,16 +120,18 @@ Citation::Citation (nlohmann::json&item, std::map<std::string,std::string>& othe
       
        auto response=client.Get(HTstring(a.first) + encodeUriComponent(IniInf["isbn"]));
        
-      if(response->status==200) GetInf[a.first]=response->body;else{std::exit(1);} 
-      std::cout<<IniInf["type"]<<std::endl;
+      if(response->status==200)GetInf[a.first]=response->body ;else{ std::cout<<response->status<<std::endl;std::exit(1);
+      } 
+     
     }}
    
   if(IniInf["type"]=="webpage")
   {for (auto a:GetInf)
     {
       auto response=client.Get(HTstring(a.first) + encodeUriComponent(IniInf["url"]));
-      if(response->status==200) GetInf[a.first]=response->body;else std::exit(1);
-    }}  */
+            if(response->status==200)GetInf[a.first]=response->body ;else{ std::cout<<response->status<<std::endl;std::exit(1);
+            } 
+    }}  
 }
 Citation* CitationConstruct(nlohmann::json& item )
 {  
