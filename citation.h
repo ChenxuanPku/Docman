@@ -18,12 +18,12 @@ std::string HTstring(const std::string& str)//在字符串前后加/ /
 } 
 class Citation {
 protected:
-  std::map<std::string,std::string>IniInf;
-  std::map<std::string,std::string> GetInf;  
+  std::map<std::string,std::string>IniInf{};
+  std::map<std::string,std::string> GetInf{};  
 public: 
   
   Citation (){}
-  Citation (std::map<std::string,std::string>IniInf,std::map<std::string,std::string> GetInf,nlohmann::json&item);
+  Citation (std::map<std::string,std::string>&IniInf,std::map<std::string,std::string>& GetInf,nlohmann::json&item);
   virtual void Print(std::ostream& output){}
   std::string GetId()
   {
@@ -32,11 +32,11 @@ public:
 };
 class Book:public Citation{
 private:
-  std::map<std::string,std::string>IniInf={{"id",""},{"isbn",""},{"type",""}};
-  std::map<std::string,std::string> GetInf={
-    {"author",{}},
-    {"title",{}},
-    {"year",{}}};
+  std::map<std::string,std::string>oIniInf={{"id","-"},{"isbn","-"},{"type","book"}};
+  std::map<std::string,std::string> oGetInf={
+    {"author","-"},
+    {"title","-"},
+    {"year","-"}};
 public:
   
 
@@ -44,47 +44,47 @@ public:
   {
     output<<"["<<Citation::IniInf["id"]<<"] "<<IniInf["type"]<<": "<<Citation::GetInf["author"]<<","<<Citation::GetInf["title"]<<","<<Citation::GetInf["publisher"]<<","<<Citation::GetInf["year"]<<std::endl;
   }
-  Book (nlohmann::json&item):Citation(IniInf,GetInf,item)
-  {
+  Book (nlohmann::json&item):Citation(oIniInf,oGetInf,item)
+  {std::cout<<"construct book"<<std::endl;
   }
 };
 
 class Article:public Citation{
 private:
-  std::map<std::string,std::string>IniInf={
-    {"id",""},
-    {"title",""},
-    {"author",""},
-    {"year",""},
-    {"journal",""},
-    {"volume",""},
-    {"issue",""},
-    {"type",""}
+  std::map<std::string,std::string>oIniInf={
+    {"id","-"},
+    {"title","-"},
+    {"author","-"},
+    {"year","-"},
+    {"journal","-"},
+    {"volume","-"},
+    {"issue","-"},
+    {"type","article"}
   };
-
+  std::map<std::string,std::string>oGetInf={};
 public:
 
     void Print(std::ostream& output)
   {
     output<<"["<<Citation::IniInf["id"]<<"] "<<IniInf["type"]<<": "<<Citation::IniInf["author"]<<","<<Citation::IniInf["title"]<<","<<Citation::IniInf["journal"]<<","<<Citation::IniInf["year"]<<","<<","<<Citation::IniInf["volume"]<<","<<Citation::IniInf["issue"]<<std::endl;
   }
-  Article (nlohmann::json&item):Citation(IniInf,GetInf,item)
-  {
+  Article (nlohmann::json&item):Citation(oIniInf,oGetInf,item)
+  {std::cout<<"construct article"<<std::endl;
   }
 };
 class Webpage:public Citation{
 private:
 
-  std::map<std::string,std::string>IniInf={{"id",""},{"url",""},{"type",""}};
-  std::map<std::string,std::string> GetInf={
-    {"title",{}}};
+  std::map<std::string,std::string>oIniInf={{"id","-"},{"url","-"},{"type","webpage"}};
+  std::map<std::string,std::string> oGetInf={
+    {"title","-"}};
 
 public:
    void Print(std::ostream& output)
   {
     output<<"["<<IniInf["id"]<<"] "<<IniInf["type"]<<": "<<IniInf["title"]<<". Avaiable at"<<IniInf["url"]<<std::endl;
   } 
-  Webpage (nlohmann::json&item):Citation(IniInf,GetInf,item){}
+  Webpage (nlohmann::json&item):Citation(oIniInf,oGetInf,item){std::cout<<"construct webpage"<<std::endl;}
 };
 int TypeID(std::string s)
 {
@@ -93,7 +93,10 @@ int TypeID(std::string s)
   if(s=="webpage") return 3;
   return 0;
 }
-Citation::Citation (std::map<std::string,std::string>IniInf,std::map<std::string,std::string> GetInf,nlohmann::json&item):IniInf(IniInf),GetInf(GetInf){
+Citation::Citation (std::map<std::string,std::string>& otherIniInf,std::map<std::string,std::string>& otherGetInf,nlohmann::json&item):IniInf(otherIniInf),GetInf(otherGetInf)
+{
+  std::cout<<"construct citation"<<std::endl;
+
   for (auto a:IniInf)
     {
       if (item[a.first].is_string()) a.second=item[a.first].get<std::string>();else std::exit(1);
@@ -117,7 +120,7 @@ Citation::Citation (std::map<std::string,std::string>IniInf,std::map<std::string
 }
 Citation* CitationConstruct(nlohmann::json& item )
 {  
-  
+  std::cout<<item["id"].get<std::string>()<<item["type"].get<std::string>()<<std::endl;
   switch(TypeID(item["type"].get<std::string>())){
     case 1: {
       return new Article(item);
