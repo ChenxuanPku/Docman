@@ -14,7 +14,7 @@ void log(){
 std::vector<Citation*> loadCitations(const std::string& filename) {
     // FIXME: load citations from file
     //open the file(.json)
-    std::cout<<filename<<std::endl;
+    //std::cout<<filename<<std::endl;
     
     std::ifstream inputJson(filename);
     std::vector<Citation*> Cite{};
@@ -56,14 +56,14 @@ int main(int argc, char** argv) {
     
     auto citations = loadCitations(argv[2]);
     std::vector<Citation*> printedCitations{};
-    std::cout<<"read"<<std::endl;
+    
     // FIXME: read all input to the string, and process citations in the input text
     int Pos;
     if(argv[3]=="-o")Pos=5;else Pos=3;
     auto input = readFromFile(argv[Pos]);
-    std::cout<<"readFile"<<std::endl;
+   
     auto ProcessedInput=CheckLegal(input);
-    for (auto c:ProcessedInput)std::cout<<c<<std::endl;
+    
     Process(ProcessedInput,citations,printedCitations);
     // ...
 
@@ -71,6 +71,7 @@ int main(int argc, char** argv) {
     {std::ofstream output{argv[4]};
     output << input;  // print the paragraph first
         output << "\nReferences:\n";
+      //  std::cout<<input;
     //check whether the input is legal.
     for (auto c : printedCitations) {
         
@@ -85,7 +86,7 @@ int main(int argc, char** argv) {
     //check whether the input is legal.
     for (auto c : printedCitations) {
          // print the paragraph first
-        output << "\nReferences:\n";
+        
         c->Print(output);
         // FIXME: print citation
        

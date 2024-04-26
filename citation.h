@@ -61,7 +61,7 @@ public:
   }
   Book (nlohmann::json&item):Citation(item,bookIniInf,bookGetInf)
   {
-     httplib::Client client{ API_ENDPOINT };
+    
   }
 };
 class Article:public Citation{
@@ -71,7 +71,7 @@ public:
 
     void Print(std::ostream& output)
   {
-    output<<"["<<Citation::IniInf["id"]<<"] "<<IniInf["type"]<<": "<<Citation::IniInf["author"]<<","<<Citation::IniInf["title"]<<","<<Citation::IniInf["journal"]<<","<<Citation::IniInf["year"]<<","<<","<<Citation::IniInf["volume"]<<","<<Citation::IniInf["issue"]<<std::endl;
+    output<<"["<<Citation::IniInf["id"]<<"] "<<IniInf["type"]<<": "<<Citation::IniInf["author"]<<","<<Citation::IniInf["title"]<<","<<Citation::IniInf["journal"]<<","<<Citation::IniInf["year"]<<","<<Citation::IniInf["volume"]<<","<<Citation::IniInf["issue"]<<std::endl;
   }
   Article (nlohmann::json&item):Citation(item,articleIniInf,articleGetInf)
   {
@@ -102,16 +102,14 @@ Citation::Citation (nlohmann::json&item, std::map<std::string,std::string>& othe
     { 
      
       if (item.contains(a.first)){
-        if(item[a.first].is_number_integer())a.second=std::to_string(item[a.first].get<int>());
+        if(item[a.first].is_number_integer())IniInf[a.first]=std::to_string(item[a.first].get<int>());
         else IniInf[a.first]=item[a.first].get<std::string>();
        }else std::exit(1);
-    std::cout<<a.first<<" "<<a.second<<std::endl;
+    
     }
-  for(auto a:IniInf)
-  {
-     std::cout<<a.first<<" "<<a.second<<std::endl;
-  }
-  std::cout<<GetId()<<std::endl;
+  
+  //std::cout<<a.first<<" "<<a.second<<std::endl;
+ 
  
 /* if(IniInf["type"]=="book")
 
@@ -165,11 +163,11 @@ void Process(std::vector<std::string>& Lib, std::vector<Citation*>& Input,std::v
   int PtrLib{0},PtrIn{0};
   for(;PtrIn!=SizeIn;PtrIn++)
   {
-    std::cout<<PtrIn<<" "<<PtrLib<<std::endl;
-    std::cout<<Lib[PtrLib]<<" "<<Input[PtrIn]->GetId()<<std::endl;
+   // std::cout<<PtrIn<<" "<<PtrLib<<std::endl;
+   // std::cout<<Lib[PtrLib]<<" "<<Input[PtrIn]->GetId()<<std::endl;
     if(Lib[PtrLib]==Input[PtrIn]->GetId())
     {
-       std::cout<<Input[PtrIn]->GetId()<<std::endl;
+     //  std::cout<<Input[PtrIn]->GetId()<<std::endl;
        Output.push_back(Input[PtrIn]);
        PtrLib++;
        
