@@ -100,14 +100,16 @@ Citation::Citation (nlohmann::json&item, std::map<std::string,std::string>& othe
  
   for (auto a:IniInf)
     { 
-      
+      try {
       if (item.contains(a.first)){
         if(item[a.first].is_null()) std::exit(1);
         else if(item[a.first].is_number_integer())IniInf[a.first]=std::to_string(item[a.first].get<int>());
         else if(item[a.first].is_string())IniInf[a.first]=item[a.first].get<std::string>();else std::exit(1);
        }else std::exit(1);
-    
     }
+    catch(const nlohmann::json::parse_error& e){
+       // std::cout<<"json"<<std::endl;
+        std::exit(1);    }} 
   
   //std::cout<<a.first<<" "<<a.second<<std::endl;
  
@@ -123,13 +125,16 @@ Citation::Citation (nlohmann::json&item, std::map<std::string,std::string>& othe
        // std::cout << response->body << std::endl; 
          nlohmann::json data = nlohmann::json::parse(response->body);
         for(auto a:GetInf)
-        {
+        {try{
         
           if (data.contains(a.first)){
            if(data[a.first].is_null()) std::exit(1);
            else if(data[a.first].is_number_integer())GetInf[a.first]=std::to_string(data[a.first].get<int>());
            else if(data[a.first].is_string())GetInf[a.first]=data[a.first].get<std::string>();else std::exit(1);
-          }else std::exit(1);
+          }else std::exit(1);}
+          catch(const nlohmann::json::parse_error& e){
+       // std::cout<<"json"<<std::endl;
+        std::exit(1);    }
         }
       }
         else{
@@ -147,12 +152,15 @@ Citation::Citation (nlohmann::json&item, std::map<std::string,std::string>& othe
            {
              nlohmann::json data = nlohmann::json::parse(response->body);
              for(auto a:GetInf)
-             {if (data.contains(a.first)){
+             {
+              try{if (data.contains(a.first)){
            if(data[a.first].is_null()) std::exit(1);
            else if(data[a.first].is_number_integer())GetInf[a.first]=std::to_string(data[a.first].get<int>());
            else if(data[a.first].is_string())GetInf[a.first]=data[a.first].get<std::string>();else std::exit(1);
           }else std::exit(1);
-           } 
+           } catch(const nlohmann::json::parse_error& e){
+       // std::cout<<"json"<<std::endl;
+        std::exit(1);    }}
            }
            else{std::exit(1);
 
