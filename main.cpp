@@ -15,7 +15,7 @@ std::vector<Citation*> loadCitations(const std::string& filename) {
     // FIXME: load citations from file
     //open the file(.json)
     //std::cout<<filename<<std::endl;
-    
+    if (filename.find("json")==std::string::npos)std::exit(1);
     std::ifstream inputJson(filename);
     std::vector<Citation*> Cite{};
     
