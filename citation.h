@@ -125,7 +125,11 @@ Citation::Citation (nlohmann::json&item, std::map<std::string,std::string>& othe
         for(auto a:GetInf)
         {
         
-          GetInf[a.first]=data[a.first].get<std::string>();
+          if (data.contains(a.first)){
+           if(data[a.first].is_null()) std::exit(1);
+           if(data[a.first].is_number_integer())GetInf[a.first]=std::to_string(data[a.first].get<int>());
+           else if(data[a.first].is_string())GetInf[a.first]=data[a.first].get<std::string>();else std::exit(1);
+          }else std::exit(1);
         }
       }
         else{
