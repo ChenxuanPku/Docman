@@ -51,8 +51,13 @@ String readFromFile(const std::string& filename)
 
 int main(int argc, char** argv) {
     // "docman", "-c", "citations.json", "input.txt"
-    if(strcmp(argv[1],"-c")!=0)std::exit(1);
-    if(strcmp(argv[3],"-o")!=0&&argc==6)std::exit(1);
+    if(argc==4) {
+       if(strcmp(argv[1],"-c")!=0)std::exit(1);
+    }
+    if(argc==6){
+       if(strcmp(argv[1],"-c")!=0||strcmp(argv[3],"-o")!=0) std::exit(1);
+    }
+    else std::exit(1);
     num=0;
     auto citations = loadCitations(argv[2]);
     std::vector<Citation*> printedCitations{};
