@@ -23,11 +23,10 @@ std::map<std::string,std::string>articleIniInf={
     {"issue",""},
     {"type","article"}
   };
-  std::map<std::string,std::string>articleGetInf={{"",""}};
-   std::map<std::string,std::string>webIniInf={{"id",""},{"url",""},{"type","webpage"}};
-  std::map<std::string,std::string>webGetInf={
+std::map<std::string,std::string>articleGetInf={{"",""}};
+std::map<std::string,std::string>webIniInf={{"id",""},{"url",""},{"type","webpage"}};
+std::map<std::string,std::string>webGetInf={
     {"title",""}};
-
 std::string HTstring(const std::string& str)//在字符串前后加/ /
 {
   std::string ans{"/"};
