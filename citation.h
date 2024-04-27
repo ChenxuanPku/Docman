@@ -102,9 +102,8 @@ Citation::Citation (nlohmann::json&item, std::map<std::string,std::string>& othe
     { 
      
       if (item.contains(a.first)){
-
         if(item[a.first].is_number_integer())IniInf[a.first]=std::to_string(item[a.first].get<int>());
-        else IniInf[a.first]=item[a.first].get<std::string>();
+        else if(item[a.first].is_string())IniInf[a.first]=item[a.first].get<std::string>();else std::exit(1);
        }else std::exit(1);
     
     }
