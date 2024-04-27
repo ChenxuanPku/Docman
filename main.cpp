@@ -22,8 +22,9 @@ std::vector<Citation*> loadCitations(const char*  filename) {
     std::vector<Citation*> Cite{};
     
     nlohmann::json data = nlohmann::json::parse(inputJson);
+    if(data.is_null())std::exit(1);
     if(!data.contains("citations"))std::exit(1);
-    //if(data["citationss"].is_null())std::exit(1);
+    if(data["citations"].is_null())std::exit(1);
     
     for (auto& item: data["citations"] )
     {
