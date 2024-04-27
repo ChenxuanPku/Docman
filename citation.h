@@ -84,7 +84,7 @@ private:
 public:
    void Print(std::ostream& output)
   {
-    output<<"["<<IniInf["id"]<<"] "<<IniInf["type"]<<": "<<GetInf["title"]<<". Avaiable at "<<IniInf["url"]<<std::endl;
+    output<<"["<<IniInf["id"]<<"] "<<IniInf["type"]<<": "<<GetInf["title"]<<". Available at "<<IniInf["url"]<<std::endl;
   } 
   Webpage (nlohmann::json&item):Citation(item,webIniInf,webGetInf){}
 };
@@ -102,6 +102,7 @@ Citation::Citation (nlohmann::json&item, std::map<std::string,std::string>& othe
     { 
      
       if (item.contains(a.first)){
+
         if(item[a.first].is_number_integer())IniInf[a.first]=std::to_string(item[a.first].get<int>());
         else IniInf[a.first]=item[a.first].get<std::string>();
        }else std::exit(1);
