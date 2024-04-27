@@ -103,7 +103,7 @@ Citation::Citation (nlohmann::json&item, std::map<std::string,std::string>& othe
       
       if (item.contains(a.first)){
         if(item[a.first].is_null()) std::exit(1);
-        if(item[a.first].is_number_integer())IniInf[a.first]=std::to_string(item[a.first].get<int>());
+        else if(item[a.first].is_number_integer())IniInf[a.first]=std::to_string(item[a.first].get<int>());
         else if(item[a.first].is_string())IniInf[a.first]=item[a.first].get<std::string>();else std::exit(1);
        }else std::exit(1);
     
@@ -127,7 +127,7 @@ Citation::Citation (nlohmann::json&item, std::map<std::string,std::string>& othe
         
           if (data.contains(a.first)){
            if(data[a.first].is_null()) std::exit(1);
-           if(data[a.first].is_number_integer())GetInf[a.first]=std::to_string(data[a.first].get<int>());
+           else if(data[a.first].is_number_integer())GetInf[a.first]=std::to_string(data[a.first].get<int>());
            else if(data[a.first].is_string())GetInf[a.first]=data[a.first].get<std::string>();else std::exit(1);
           }else std::exit(1);
         }
@@ -149,7 +149,7 @@ Citation::Citation (nlohmann::json&item, std::map<std::string,std::string>& othe
              for(auto a:GetInf)
              {if (data.contains(a.first)){
            if(data[a.first].is_null()) std::exit(1);
-           if(data[a.first].is_number_integer())GetInf[a.first]=std::to_string(data[a.first].get<int>());
+           else if(data[a.first].is_number_integer())GetInf[a.first]=std::to_string(data[a.first].get<int>());
            else if(data[a.first].is_string())GetInf[a.first]=data[a.first].get<std::string>();else std::exit(1);
           }else std::exit(1);
            } 
