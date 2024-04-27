@@ -16,9 +16,9 @@ std::vector<Citation*> loadCitations(const char*  filename) {
     // FIXME: load citations from file
     //open the file(.json)
     //std::cout<<filename<<std::endl;
-    
+     
     std::ifstream inputJson(filename);
-   
+   try{
     std::vector<Citation*> Cite{};
     
     nlohmann::json data = nlohmann::json::parse(inputJson);
@@ -29,7 +29,10 @@ std::vector<Citation*> loadCitations(const char*  filename) {
     }
     std::sort(Cite.begin(),Cite.end(),cmp);
     
-    return Cite;
+    return Cite;}
+    catch(const nlohmann::json::parse_error& e){
+       // std::cout<<"json"<<std::endl;
+        std::exit(1);    }
 }
 String readFromFile(const  char* filename)
 //读文件,输入字母串组
