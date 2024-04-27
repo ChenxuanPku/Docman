@@ -27,6 +27,7 @@ std::vector<Citation*> loadCitations(const char*  filename) {
         
         Cite.push_back(CitationConstruct(item));
     }
+    if(Cite.size()==0)std::exit(1);
     std::sort(Cite.begin(),Cite.end(),cmp);
     
     return Cite;}
@@ -38,17 +39,18 @@ String readFromFile(const  char* filename)
 //读文件,输入字母串组
 {   
     
-    
+    int num{0};
     String FileResult{}; 
     std::string line;
     if(strcmp(filename,"-")!=0)
     {std::ifstream inputFile(filename);
     while(std::getline(inputFile,line))
-      FileResult.Push_Back(line);}
+      {num++;FileResult.Push_Back(line);}}
     else 
     {while(std::getline(std::cin,line))
-      FileResult.Push_Back(line);}
-    return FileResult;
+       {num++;FileResult.Push_Back(line);}}
+   if(num>0)return FileResult;
+   else std::exit(1);
     //这里相当于起到了构造函数的作用
 }
 
