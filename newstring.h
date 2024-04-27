@@ -44,8 +44,8 @@ std::vector<std::string> CheckLegal(String& s)
                 Return.push_back(currentNumber);
                 
                 currentNumber.clear();
-            }
-        } else if (count>0)
+            }else  std::exit(1);
+        } else if(count!=0)
           { 
             if(count==1){
               

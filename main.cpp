@@ -51,27 +51,28 @@ String readFromFile(const std::string& filename)
 
 int main(int argc, char** argv) {
     // "docman", "-c", "citations.json", "input.txt"
-    
+    if(strcmp(argv[1],"-c")!=0)std::exit(1);
+    if(strcmp(argv[3],"-o")!=0&&argc==6)std::exit(1);
     num=0;
-    
     auto citations = loadCitations(argv[2]);
     std::vector<Citation*> printedCitations{};
     
     // FIXME: read all input to the string, and process citations in the input text
-    int Pos;
-    if(argv[3]=="-o")Pos=5;else Pos=3;
+    int Pos{argc-1};
     auto input = readFromFile(argv[Pos]);
-   
-    auto ProcessedInput=CheckLegal(input);
     
+    auto ProcessedInput=CheckLegal(input);
     Process(ProcessedInput,citations,printedCitations);
+    
     // ...
-
+   
     if (Pos==5)
-    {std::ofstream output{argv[4]};
-    output << input;  // print the paragraph first
+
+    {   
+        std::ofstream output{argv[4]};
+        output << input;  // print the paragraph first
         output << "\nReferences:\n";
-      //  std::cout<<input;
+       
     //check whether the input is legal.
     for (auto c : printedCitations) {
         
@@ -80,8 +81,9 @@ int main(int argc, char** argv) {
        
     }}
     else {
+        
         std::ostream& output{std::cout};
-      output << input;  // print the paragraph first
+        output << input;  // print the paragraph first
         output << "\nReferences:\n";
     //check whether the input is legal.
     for (auto c : printedCitations) {
