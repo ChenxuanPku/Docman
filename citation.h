@@ -57,7 +57,7 @@ public:
 
   void Print(std::ostream& output)
   {
-    output<<"["<<Citation::IniInf["id"]<<"] "<<IniInf["type"]<<": "<<Citation::GetInf["author"]<<","<<Citation::GetInf["title"]<<","<<Citation::GetInf["publisher"]<<","<<Citation::GetInf["year"]<<std::endl;
+    output<<"["<<Citation::IniInf["id"]<<"] "<<IniInf["type"]<<": "<<Citation::GetInf["author"]<<", "<<Citation::GetInf["title"]<<", "<<Citation::GetInf["publisher"]<<", "<<Citation::GetInf["year"]<<std::endl;
   }
   Book (nlohmann::json&item):Citation(item,bookIniInf,bookGetInf)
   {
@@ -71,7 +71,7 @@ public:
 
     void Print(std::ostream& output)
   {
-    output<<"["<<Citation::IniInf["id"]<<"] "<<IniInf["type"]<<": "<<Citation::IniInf["author"]<<","<<Citation::IniInf["title"]<<","<<Citation::IniInf["journal"]<<","<<Citation::IniInf["year"]<<","<<Citation::IniInf["volume"]<<","<<Citation::IniInf["issue"]<<std::endl;
+    output<<"["<<Citation::IniInf["id"]<<"] "<<IniInf["type"]<<": "<<Citation::IniInf["author"]<<", "<<Citation::IniInf["title"]<<", "<<Citation::IniInf["journal"]<<", "<<Citation::IniInf["year"]<<", "<<Citation::IniInf["volume"]<<", "<<Citation::IniInf["issue"]<<std::endl;
   }
   Article (nlohmann::json&item):Citation(item,articleIniInf,articleGetInf)
   {
