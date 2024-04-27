@@ -1,7 +1,8 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
-
+#include<cstring>
+#include<string>
 #include "utils.hpp"
 #include "citation.h"
 #include "newstring.h"
@@ -11,11 +12,11 @@ void log(){
     std::cout<<num<<std::endl;
     num++;
 }
-std::vector<Citation*> loadCitations(const std::string& filename) {
+std::vector<Citation*> loadCitations(const char*  filename) {
     // FIXME: load citations from file
     //open the file(.json)
     //std::cout<<filename<<std::endl;
-    if (filename.find("json")==std::string::npos)std::exit(1);
+    if(strstr(filename,".json")==nullptr){ std::exit(1);}
     std::ifstream inputJson(filename);
     std::vector<Citation*> Cite{};
     
@@ -29,14 +30,14 @@ std::vector<Citation*> loadCitations(const std::string& filename) {
     
     return Cite;
 }
-String readFromFile(const std::string& filename)
+String readFromFile(const  char* filename)
 //读文件,输入字母串组
 {   
     
     
     String FileResult{}; 
     std::string line;
-    if(filename!="-")
+    if(strcmp(filename,"-")!=0)
     {std::ifstream inputFile(filename);
     while(std::getline(inputFile,line))
       FileResult.Push_Back(line);}
@@ -53,7 +54,7 @@ int main(int argc, char** argv) {
     // "docman", "-c", "citations.json", "input.txt"
     if(argc==4) {
        if(strcmp(argv[1],"-c")!=0)std::exit(1);
-    }
+    }else
     if(argc==6){
        if(strcmp(argv[1],"-c")!=0||strcmp(argv[3],"-o")!=0) std::exit(1);
     }

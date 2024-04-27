@@ -41,6 +41,7 @@ std::vector<std::string> CheckLegal(String& s)
             count--;
             
             if (currentNumber.length()>0) {
+                if(std::find(Return.begin(),Return.end(),currentNumber)==Return.end())
                 Return.push_back(currentNumber);
                 
                 currentNumber.clear();
