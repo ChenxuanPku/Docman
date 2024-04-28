@@ -28,12 +28,10 @@ std::vector<Citation*> loadCitations(const char*  filename) {
     
     for (auto& item: data["citations"] )
     {
-        
         Cite.push_back(CitationConstruct(item));
     }
     if(Cite.size()==0)std::exit(1);
     std::sort(Cite.begin(),Cite.end(),cmp);
-    
     return Cite;}
     catch(const nlohmann::json::parse_error& e){
        // std::cout<<"json"<<std::endl;
@@ -62,6 +60,7 @@ String readFromFile(const  char* filename)
 
 int main(int argc, char** argv) {
     // "docman", "-c", "citations.json", "input.txt"
+    //只有两种输入是合法的,除此之外都需要异常
     if(argc==4) {
        if(strcmp(argv[1],"-c")!=0)std::exit(1);
     }else
@@ -79,35 +78,21 @@ int main(int argc, char** argv) {
     
     auto ProcessedInput=CheckLegal(input);
     Process(ProcessedInput,citations,printedCitations);
-    
-    // ...
-   
+    //根据输出流不同,写两个输出函数
     if (Pos==5)
-
     {   
         std::ofstream output{argv[4]};
-        output << input;  // print the paragraph first
+        output << input;
         output << "\nReferences:\n";
-       
-    //check whether the input is legal.
     for (auto c : printedCitations) {
-        
         c->Print(output);
-        // FIXME: print citation
-       
     }}
     else {
-        
         std::ostream& output{std::cout};
-        output << input;  // print the paragraph first
+        output << input; 
         output << "\nReferences:\n";
-    //check whether the input is legal.
     for (auto c : printedCitations) {
-         // print the paragraph first
-        
         c->Print(output);
-        // FIXME: print citation
-       
     }}
     for (auto c : citations) {
         delete c;
