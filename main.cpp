@@ -8,10 +8,6 @@
 #include "newstring.h"
 #include <nlohmann/json.hpp>
 std::vector<Citation*> loadCitations(const char*  filename) {
-    // FIXME: load citations from file
-    //open the file(.json)
-    //std::cout<<filename<<std::endl;
-     
     std::ifstream inputJson(filename);
    try{
     std::vector<Citation*> Cite{};
@@ -66,11 +62,12 @@ int main(int argc, char** argv) {
     auto citations = loadCitations(argv[2]);
     std::vector<Citation*> printedCitations{};
     
-    // FIXME: read all input to the string, and process citations in the input text
+    
     int Pos{argc-1};
     auto input = readFromFile(argv[Pos]);
-    
+    //input负责保存所有输入文本
     auto ProcessedInput=CheckLegal(input);
+    //检查输入文本的合法性,并且导出所有引用.
     Process(ProcessedInput,citations,printedCitations);
     //根据输出流不同,写两个输出函数
     if (Pos==5)
