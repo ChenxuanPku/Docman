@@ -64,7 +64,7 @@ std::vector<std::string> CheckLegal(String& s)
       if(c==')')scount--;
     }
   }
-    if(count!=0||scount!=0||bcount!=0)std::exit(1);
+    if(count!=0)std::exit(1);
    std::sort(Return.begin(),Return.end());
   
 }return Return;}
