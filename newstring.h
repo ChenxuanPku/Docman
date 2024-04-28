@@ -30,6 +30,8 @@ std::vector<std::string> CheckLegal(String& s)
   {
   std::string currentNumber;
       int count = 0;
+      int scount{0};
+      int bcount{0};
     for (char c:Para)
     {
       
@@ -50,14 +52,19 @@ std::vector<std::string> CheckLegal(String& s)
           { 
             if(count==1){
               
-              if(c>='0'&&c<='9'){
+              
                 currentNumber+=c;
-                }else std::exit(1);
+                
             }
             else std::exit(1);
+    }else{
+      if(c=='{')bcount++;
+      if(c=='}')bcount--;
+      if(c=='(')scount++;
+      if(c==')')scount--;
     }
   }
-    
+    if(count!=0||scount!=0||bcount!=0)std::exit(1);
    std::sort(Return.begin(),Return.end());
   
 }return Return;}
