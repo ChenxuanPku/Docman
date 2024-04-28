@@ -33,6 +33,8 @@ std::vector<std::string> CheckLegal(String& s)
   {
   std::string currentNumber;
     int count = 0;
+    int bcount{0};
+    int scount{0};
     for (char c:Para)
     {
       if (c == '[') {
@@ -50,6 +52,11 @@ std::vector<std::string> CheckLegal(String& s)
                 currentNumber+=c;
             }
             else std::exit(1);
+               }else{
+      if(c=='{')bcount++;
+      if(c=='}')bcount--;
+      if(c=='(')scount++;
+      if(c==')')scount--;
     }
   }
     if(count!=0)std::exit(1);
