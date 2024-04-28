@@ -51,16 +51,10 @@ std::vector<std::string> CheckLegal(String& s)
             if(count==1){
                 currentNumber+=c;
             }
-            else std::exit(1);
-               }else{
-      if(c=='{')bcount++;
-      if(c=='}')bcount--;
-      if(c=='(')scount++;
-      if(c==')')scount--;
+            else std::exit(1);}
     }
-  }
     if(count!=0)std::exit(1);
-   std::sort(Return.begin(),Return.end());
+    std::sort(Return.begin(),Return.end());
    }return Return;
 }
 #endif
