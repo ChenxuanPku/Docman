@@ -9,7 +9,7 @@
 #include <nlohmann/json.hpp>
 std::vector<Citation*> loadCitations(const char*  filename) {
     std::ifstream inputJson(filename);
-   try{
+    try{
     std::vector<Citation*> Cite{};
     
     nlohmann::json data = nlohmann::json::parse(inputJson);
