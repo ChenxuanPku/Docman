@@ -7,11 +7,6 @@
 #include "citation.h"
 #include "newstring.h"
 #include <nlohmann/json.hpp>
-int num;
-void log(){
-    std::cout<<num<<std::endl;
-    num++;
-}
 std::vector<Citation*> loadCitations(const char*  filename) {
     // FIXME: load citations from file
     //open the file(.json)
@@ -68,7 +63,6 @@ int main(int argc, char** argv) {
        if(strcmp(argv[1],"-c")!=0||strcmp(argv[3],"-o")!=0) std::exit(1);
     }
     else std::exit(1);
-    num=0;
     auto citations = loadCitations(argv[2]);
     std::vector<Citation*> printedCitations{};
     
