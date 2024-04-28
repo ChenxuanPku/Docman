@@ -50,9 +50,9 @@ std::vector<std::string> CheckLegal(String& s)
           { 
             if(count==1){
               
-              //if(c>='0'&&c<='9'){
+              if(c>='0'&&c<='9'){
                 currentNumber+=c;
-                //}else std::exit(1);
+                }else std::exit(1);
             }
             else std::exit(1);
     }
