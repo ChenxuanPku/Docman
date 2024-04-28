@@ -168,6 +168,10 @@ Citation::Citation (nlohmann::json&item, std::map<std::string,std::string>& othe
 }
 Citation* CitationConstruct(nlohmann::json& item )
 {  
+ if(item.is_null())std::exit(1);
+ if(!item.contains("type"))std::exit(1);
+ if(item["type"].is_null())std::exit(1);
+ if(!item["type"].is_string())std::exit(1);
  
   switch(TypeID(item["type"].get<std::string>())){
     case 1: {
