@@ -7,7 +7,7 @@
 #include <bitset>
 
 class String{
-//利用多个std::string储存文本内容
+//重新写了std::vecotr<std::string>重载了<<
 private:
   std::vector<std::string> str{};
 public:
