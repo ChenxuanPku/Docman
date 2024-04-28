@@ -191,11 +191,10 @@ void Process(std::vector<std::string>& Lib, std::vector<Citation*>& Input,std::v
   int PtrLib{0},PtrIn{0};
   for(;PtrIn!=SizeIn;PtrIn++)
   {
-   // std::cout<<PtrIn<<" "<<PtrLib<<std::endl;
-   // std::cout<<Lib[PtrLib]<<" "<<Input[PtrIn]->GetId()<<std::endl;
+
     if(Lib[PtrLib]==Input[PtrIn]->GetId())
     {
-     //  std::cout<<Input[PtrIn]->GetId()<<std::endl;
+
        Output.push_back(Input[PtrIn]);
        PtrLib++;
     }

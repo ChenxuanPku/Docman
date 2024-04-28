@@ -9,9 +9,9 @@
 #include <nlohmann/json.hpp>
 std::vector<Citation*> loadCitations(const char*  filename) {
     std::ifstream inputJson(filename);
-    try{
-    std::vector<Citation*> Cite{};
     
+   try{
+    std::vector<Citation*> Cite{};
     nlohmann::json data = nlohmann::json::parse(inputJson);
     if(data.is_null())std::exit(1);
     if(!data.contains("citations"))std::exit(1);
